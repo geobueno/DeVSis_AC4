@@ -83,6 +83,16 @@
             </div>
         </div>
     </div>
+    <div>
+        <ul>
+            {% for aluno in nomes%}
+            <li>
+                {{aluno.RA}}-{{aluno.Nome}}
+            </li>
+            {% endfor %}
+            
+        </ul>
+    </div>
     <footer class="footer bottom p-3 m-0 bg-primary text-white">
         <div class="container">
             <small>SITE DESENVOLVIDO POR GEORGETE BUENO</small>
