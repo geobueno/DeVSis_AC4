@@ -1,38 +1,53 @@
-from flask import Flask
-from flask import render_template
-import grupos
+from flask import Flask, request, render_template
+
+import pandas as pd
+from matplotlib import pyplot as Mplt
+import seaborn as sb
+import xlrd
+
+Dados = pd.read_excel('static\PesquisaAuto.xlsx', 'Pesquisa')
+
+'''histograma com densidade'''
+
+sb.distplot(Dados["Imagem"], bins=10, kde=True)
+
+Mplt.savefig('static\histogramaComDensidade.jpg');
+
+'''dispersão com histograma'''
+
+sb.jointplot(x="Preco", y="Imagem", data=Dados)
+
+Mplt.savefig('static\dispersao.jpg')
+
+'''box-plot'''
+
+sb.boxplot(y="Imagem", data=Dados)
+
+Mplt.savefig('static\_boxplot.jpg')
+
+'''box-plot-categorizado'''
+
+sb.boxplot(x="Idade", y="Imagem", data=Dados)
+
+Mplt.savefig('static\_boxplotCategorizado.jpg')
+
+'''barra com médias'''
+
+sb.barplot(x="Genero", y="Imagem", data=Dados)
+
+Mplt.savefig('static\_barraComMedias.jpg')
+
 
 app = Flask(__name__)
 
+@app.route ("/histograma", methods=["GET"])
+def histograma():
+    boxplot=request.a["boxplot"]
+    return render_template("histograma.html")
 
-#templates de direcionamento
-@app.route ("/home", methods=["GET"])
-def home():
-    return render_template("index.html")
-
-@app.route ("/projetos", methods=["GET"])
-def projetos():
-    return render_template("projetos.html")
-
-@app.route ("/contato", methods=["GET"])
-def contato():
-    return render_template("contato.html")
-
-@app.route ("/sobre", methods=["GET"])
-def sobre():
-    return render_template("sobre.html")
-
-#templates de funcoes
-@app.route ("/", methods=["GET"])
-@app.route ("/home", methods=["GET"])
-def index():
-    grupos.gravaAlunos()
-    nomesAlunos = grupos.listaAlunos()
-    return render_template("index.html", nomes=nomesAlunos)
-
-
-
-
+@app.route ("/dispersao", methods=["GET"])
+def dispersao():
+    return render_template("dispersao.html")
 
 if __name__ == "__main__":
     app.run(port=80)
